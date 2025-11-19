@@ -24,7 +24,7 @@ namespace Moodly
 
         public void SaveEntries(ObservableCollection<MoodEntry> entries) 
         {
-            var json = JsonSerializer.Serialize(entries);
+            string json = JsonSerializer.Serialize(entries);
             Preferences.Default.Set(StorageKey, json);
         }
     }

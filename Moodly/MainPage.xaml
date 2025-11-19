@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:local="clr-namespace:Moodly"
              x:Class="Moodly.MainPage"
-             Title="Moodly">
+             Title="🤖Moodly🎭">
 
     <!--Ресурсы-->
     <ContentPage.Resources>
@@ -21,21 +21,40 @@
         </Grid.RowDefinitions>
 
         <!--Панель-->
-        <VerticalStackLayout Grid.Row="0" Spacing="15" HorizontalOptions="Center" WidthRequest="950">
-            <Label Text="Как вы себя чувствуете?" FontSize="18" HorizontalOptions="Center"/>
-            <Label Text="Ваши эмоции заслуживают быть записанными." FontSize="10" HorizontalOptions="Center"/>
+        <VerticalStackLayout x:Name="HeaderLayout" Grid.Row="0" Spacing="15">
+            <VerticalStackLayout.HorizontalOptions>
+                <LayoutOptions Alignment="Fill" Expands="True" />
+            </VerticalStackLayout.HorizontalOptions>
 
-            <Picker x:Name="EmojiPicker" Title="Выберите эмодзи:" HorizontalOptions="Center" WidthRequest="900">
+            <Label Text="🎭Как вы себя чувствуете?🎭" FontSize="18" HorizontalOptions="Center"/>
+            <Label Text="❤️📃Ваши эмоции заслуживают быть записанными.📃❤️" FontSize="10" HorizontalOptions="Center"/>
+
+            <Picker x:Name="EmojiPicker" Title="Выберите эмодзи:">
+                <Picker.HorizontalOptions>
+                    <LayoutOptions Alignment="Fill" Expands="True" />
+                </Picker.HorizontalOptions>
                 <Picker.Items>
                     <x:String>😊</x:String>
                     <x:String>😐</x:String>
                     <x:String>😔</x:String>
+                    <x:String>😡</x:String>
+                    <x:String>😂</x:String>
+                    <x:String>😍</x:String>
+                    <x:String>😵‍💫</x:String>
+                    <x:String>🤖</x:String>
                 </Picker.Items>
             </Picker>
 
-            <Entry x:Name="NoteEntry" Placeholder="Напишите заметку о своём состоянии (до 200 символов)" MaxLength="200" HorizontalOptions="Center" WidthRequest="900"/>
-            <Button x:Name="OnSave" Text="Сохранить" Clicked="OnSave_Clicked" BackgroundColor="#4CAF50" TextColor="White" HorizontalOptions="Center" WidthRequest="250" HeightRequest="50"/>
-            <Label Text="Последние ваши записи:" FontSize="16" Margin="0, 10, 0, 0" WidthRequest="1000"/>
+            <Entry x:Name="NoteEntry"
+                   Placeholder="Напишите заметку о своём состоянии (до 600 символов)"
+                   MaxLength="600">
+                <Entry.HorizontalOptions>
+                    <LayoutOptions Alignment="Fill" Expands="True" />
+                </Entry.HorizontalOptions>
+            </Entry>
+
+            <Button x:Name="OnSave" Text="💾Сохранить💾" Clicked="OnSave_Clicked" BackgroundColor="#4CAF50" TextColor="White" HorizontalOptions="Center"/>
+            <Label Text="Последние ваши записи📓:" FontSize="16" Margin="0, 10, 0, 0"/>
         </VerticalStackLayout>
 
         <!-- Список занимает всё доступное место и скроллится -->
@@ -43,27 +62,55 @@
                   Grid.Row="1"
                   HasUnevenRows="True"
                   Margin="0, 10, 0, 0"
-                  VerticalOptions="Start"
-                  HorizontalOptions="Center"
-                  SeparatorVisibility="Default"
-                  WidthRequest="1000">
+                  SeparatorVisibility="Default">
+            
+            <ListView.VerticalOptions>
+                <LayoutOptions Alignment="Fill" Expands="True" />
+            </ListView.VerticalOptions>
+            
+            <ListView.HorizontalOptions>
+                <LayoutOptions Alignment="Fill" Expands="True" />
+            </ListView.HorizontalOptions>
+            
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <ViewCell>
+                        <!--Кнопка удаления записей-->
                         <ViewCell.ContextActions>
                             <MenuItem Text="Удалить" Clicked="OnDelete_Clicked" CommandParameter="{Binding .}" IsDestructive="True" />
                         </ViewCell.ContextActions>
-                        <StackLayout Orientation="Horizontal" Padding="10" BackgroundColor="{Binding Emoji, Converter={StaticResource EmojiToColorConverter}}">
-                            <Label Text="{Binding Emoji}" FontSize="20" />
-                            <Label Text="{Binding Date, StringFormat='{0:dd.MM}'}" FontSize="14" Margin="10,0,0,0"/>
-                            <Label Text="{Binding Note}" FontSize="14" Margin="10,0,0,0"/>
-                        </StackLayout>
+
+                        <!-- Используем Grid: последние колонки - звёздная, чтобы заметка занимала оставшееся место и могла переноситься -->
+                        <Grid Padding="10" BackgroundColor="{Binding Emoji, Converter={StaticResource EmojiToColorConverter}}">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+
+                            <Label Grid.Column="0" Text="{Binding Emoji}" FontSize="20" VerticalOptions="Center" />
+                            <Label Grid.Column="1" Text="{Binding Date, StringFormat='{0:dd.MM}'}" FontSize="14" Margin="10,0,0,0" VerticalOptions="Center" />
+
+                            <Label Grid.Column="2"
+                                   Text="{Binding Note}"
+                                   FontSize="14"
+                                   Margin="10,0,0,0"
+                                   LineBreakMode="WordWrap">
+                                <Label.HorizontalOptions>
+                                    <LayoutOptions Alignment="Fill" Expands="True" />
+                                </Label.HorizontalOptions>
+                                <Label.VerticalOptions>
+                                    <LayoutOptions Alignment="Start" />
+                                </Label.VerticalOptions>
+                            </Label>
+                        </Grid>
                     </ViewCell>
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>
 
         <!--Версия приложения-->
-        <Label x:Name="VersionLabel" Grid.Row="2" FontSize="12" HorizontalTextAlignment="End" Margin="0,10,0,0"/>
+        <Label x:Name="VersionLabel" Grid.Row="2" FontSize="12" HorizontalTextAlignment="End" Margin="0,0,0,25"/>
+        <Label Text="Разработчик: Grey_NET" Grid.Row="2" HorizontalOptions="End" VerticalOptions="End" FontSize="12"/>
     </Grid>
 </ContentPage>
